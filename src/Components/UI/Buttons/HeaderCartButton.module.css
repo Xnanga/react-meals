@@ -1,0 +1,49 @@
+.header-cart-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+
+  height: 6rem;
+  width: 25rem;
+
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+
+  padding: 0.5rem 3.5rem;
+  border-radius: 30px;
+
+  font-weight: 700;
+
+  transition: all 0.2s;
+}
+
+.header-cart-button:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.header-cart-button > svg {
+  height: 3rem;
+  width: 3rem;
+}
+
+.header-cart-button__icon {
+  height: 2rem;
+  width: 2rem;
+}
+
+.header-cart-button__text {
+  font-weight: 700;
+}
+
+.header-cart-button__number-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 3rem;
+  width: 3rem;
+
+  background-color: var(--orange-color);
+
+  border-radius: 50%;
+}
