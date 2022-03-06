@@ -1,5 +1,6 @@
 import "./App.css";
 
+import { MealsContextProvider } from "./Context/meals-context";
 import Header from "./Components/UI/Header/Header";
 import FeaturedImage from "./Components/Banners/FeaturedImage/FeaturedImage";
 import Card from "./Components/UI/Card/Card";
@@ -7,7 +8,7 @@ import MealsMenu from "./Components/Meals/MealsMenu";
 
 function App() {
   return (
-    <>
+    <MealsContextProvider>
       <Header />
       <FeaturedImage imgSrc="/meals.jpg" imgAlt="A table of food" />
       <main>
@@ -26,7 +27,7 @@ function App() {
           <MealsMenu />
         </Card>
       </main>
-    </>
+    </MealsContextProvider>
   );
 }
 

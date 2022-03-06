@@ -1,25 +1,22 @@
 import styles from "./MealsMenu.module.css";
 
 import Meal from "./Meal";
+import AvailableMealsData from "./AvailableMealsData";
 
-const MealsMenu = (props) => {
+const MealsMenu = () => {
   return (
     <div className={styles["meals-menu"]}>
-      <Meal
-        mealName="Sushi"
-        mealDescription="Finest fish and veggies"
-        mealPrice="£22.99"
-      />
-      <Meal
-        mealName="Sushi"
-        mealDescription="Finest fish and veggies"
-        mealPrice="£22.99"
-      />
-      <Meal
-        mealName="Sushi"
-        mealDescription="Finest fish and veggies"
-        mealPrice="£22.99"
-      />
+      {AvailableMealsData.map((meal) => {
+        return (
+          <Meal
+            key={meal.id}
+            id={meal.id}
+            mealName={meal.name}
+            mealDescription={meal.description}
+            mealPrice={meal.price}
+          />
+        );
+      })}
     </div>
   );
 };
