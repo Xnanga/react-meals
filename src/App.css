@@ -60,3 +60,13 @@ h1 {
 p {
   margin-bottom: 1.75rem;
 }
+
+#backdrop-root {
+  position: fixed;
+  z-index: 20;
+
+  /* height: 100vh;
+  width: 100vw;
+  pointer-events: none; */
+  overflow: visible;
+}

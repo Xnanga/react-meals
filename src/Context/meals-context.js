@@ -1,65 +1,79 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useReducer, useState } from "react";
 
 const MealsContext = React.createContext({
   mealData: [],
   totalCost: 0,
   overallTotals: 0,
+  MEAL_ACTION: {},
+  modalVisible: false,
+
   mealsDataHandler: () => {},
   cartCountHandler: () => {},
+  dispatchMealData: () => {},
 });
 
-const totalReducer = (state, action) => {
-  if (action.type === "MEALS_COUNT") {
-    let totalMeals = 0;
-    action.mealData.forEach((meal) => (totalMeals = totalMeals + meal.count));
-    return { totalBill: state.totalBill, totalMeals: totalMeals };
-  }
-  if (action.type === "BILL_COUNT") {
-    let totalBill = 0.0;
-    action.mealData.forEach((meal) => (totalBill = totalBill + meal.totalCost));
-    return { totalBill: totalBill, totalMeals: state.totalMeals };
+const MEAL_ACTION = {
+  addMeals: "addMeals",
+  removeMeals: "removeMeals",
+};
+
+const mealReducer = (state, action) => {
+  if (action.type === "addMeals") {
+    let newMealData = state.currentMeals;
+    const currentMealIndex = newMealData.findIndex(
+      (meal) => meal.id === action.data.id
+    );
+
+    if (currentMealIndex > -1) {
+      return {
+        totalCount: state.totalCount + 1,
+        totalBill: state.totalBill + action.data.mealPrice,
+        currentMeals: [
+          ...newMealData.slice(0, currentMealIndex),
+          {
+            ...newMealData[currentMealIndex],
+            count: newMealData[currentMealIndex].count + 1,
+          },
+          ...newMealData.slice(currentMealIndex + 1),
+        ],
+      };
+    }
+
+    if (currentMealIndex === -1) {
+      const newMeal = {
+        id: action.data.id,
+        name: action.data.mealName,
+        price: action.data.mealPrice,
+        count: 1,
+      };
+      return {
+        totalCount: state.totalCount + 1,
+        totalBill: state.totalBill + action.data.mealPrice,
+        currentMeals: [...state.currentMeals, newMeal],
+      };
+    }
+  } else {
+    return state;
   }
 };
 
 export const MealsContextProvider = (props) => {
-  const [mealData, setMealData] = useState([]);
-  const [totalCost, setTotalCost] = useState(0);
-
-  const mealsDataHandler = (id, name, count, totalCost) => {
-    let newMealData = mealData;
-    const currentMealIndex = newMealData.findIndex((meal) => meal.id === id);
-
-    if (currentMealIndex !== -1) {
-      newMealData[currentMealIndex].count = count;
-      newMealData[currentMealIndex].totalCost = totalCost;
-      setMealData(newMealData);
-    } else {
-      setMealData((prevState) => {
-        return [
-          ...prevState,
-          {
-            id: id,
-            name: name,
-            count: count,
-            totalCost: totalCost,
-          },
-        ];
-      });
-    }
-  };
-
-  const [totals, dispatchTotals] = useReducer(totalReducer, {
-    totalMeals: 0,
-    totalCost: 0,
+  const [modalVisible, setModalVisible] = useState(false);
+  const [mealData, dispatchMealData] = useReducer(mealReducer, {
+    currentMeals: [],
+    totalCount: 0,
+    totalBill: 0,
   });
 
   return (
     <MealsContext.Provider
       value={{
         mealData: mealData,
-        // totalCost: totals.totalCost,
-        // totalMeals: totals.totalMeals,
-        mealsDataHandler: mealsDataHandler,
+        MEAL_ACTION: MEAL_ACTION,
+        totalMealCount: mealData.totalCount,
+        modalVisible: modalVisible,
+        setModalVisible: setModalVisible,
+        dispatchMealData: dispatchMealData,
       }}
     >
       {props.children}

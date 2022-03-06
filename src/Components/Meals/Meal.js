@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 
 import styles from "./Meal.module.css";
 import MealsContext from "../../Context/meals-context";
@@ -6,21 +6,15 @@ import DefaultButton from "../UI/Buttons/DefaultButton";
 
 const Meal = (props) => {
   const ctx = useContext(MealsContext);
-
   const [mealCount, setMealCount] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
 
   const mealCountHandler = () => {
     setMealCount((prevState) => prevState + 1);
+    ctx.dispatchMealData({
+      type: ctx.MEAL_ACTION.addMeals,
+      data: props,
+    });
   };
-
-  useEffect(() => {
-    setTotalPrice(mealCount * props.mealPrice);
-  }, [mealCount, props.mealPrice]);
-
-  useEffect(() => {
-    ctx.mealsDataHandler(props.id, props.mealName, mealCount, totalPrice);
-  }, [ctx, props.id, props.mealName, mealCount, totalPrice]);
 
   return (
     <div className={styles["meal"]}>
