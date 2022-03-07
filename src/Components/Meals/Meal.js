@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import styles from "./Meal.module.css";
 import MealsContext from "../../Context/meals-context";
@@ -6,14 +6,19 @@ import DefaultButton from "../UI/Buttons/DefaultButton";
 
 const Meal = (props) => {
   const ctx = useContext(MealsContext);
-  const [mealCount, setMealCount] = useState(0);
 
   const mealCountHandler = () => {
-    setMealCount((prevState) => prevState + 1);
     ctx.dispatchMealData({
       type: ctx.MEAL_ACTION.addMeals,
       data: props,
     });
+  };
+
+  const getCurrentMealCount = (mealId) => {
+    const mealIndex = ctx.mealData.currentMeals.findIndex(
+      (meal) => meal.id === mealId
+    );
+    if (mealIndex > -1) return ctx.mealData.currentMeals[mealIndex].count;
   };
 
   return (
@@ -31,8 +36,7 @@ const Meal = (props) => {
           <input
             className={styles["meal__amount-input"]}
             type="number"
-            value={mealCount}
-            min="0"
+            value={getCurrentMealCount(props.id) || 0}
             disabled
           />
         </div>
