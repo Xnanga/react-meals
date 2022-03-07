@@ -2,19 +2,24 @@ import React, { useReducer, useState } from "react";
 
 const MealsContext = React.createContext({
   mealData: [],
-  totalCost: 0,
-  overallTotals: 0,
   MEAL_ACTION: {},
   modalVisible: false,
+  totalMealCount: 0,
+  totalBill: 0,
 
-  mealsDataHandler: () => {},
-  cartCountHandler: () => {},
   dispatchMealData: () => {},
+  setModalVisible: () => {},
 });
 
 const MEAL_ACTION = {
   addMeals: "addMeals",
   removeMeals: "removeMeals",
+};
+
+const roundToDecimalPlaces = (num, decimalPlaces) => {
+  return Number(
+    Math.round(parseFloat(num + "e" + decimalPlaces)) + "e-" + decimalPlaces
+  );
 };
 
 const mealReducer = (state, action) => {
@@ -27,7 +32,10 @@ const mealReducer = (state, action) => {
     if (currentMealIndex > -1) {
       return {
         totalCount: state.totalCount + 1,
-        totalBill: state.totalBill + action.data.mealPrice,
+        totalBill: roundToDecimalPlaces(
+          state.totalBill + action.data.mealPrice,
+          2
+        ),
         currentMeals: [
           ...newMealData.slice(0, currentMealIndex),
           {
@@ -48,8 +56,36 @@ const mealReducer = (state, action) => {
       };
       return {
         totalCount: state.totalCount + 1,
-        totalBill: state.totalBill + action.data.mealPrice,
+        totalBill: roundToDecimalPlaces(
+          state.totalBill + action.data.mealPrice,
+          2
+        ),
         currentMeals: [...state.currentMeals, newMeal],
+      };
+    }
+  }
+
+  if (action.type === "removeMeals") {
+    let newMealData = state.currentMeals;
+    const currentMealIndex = newMealData.findIndex(
+      (meal) => meal.id === action.data.id
+    );
+
+    if (currentMealIndex > -1) {
+      return {
+        totalCount: state.totalCount - 1,
+        totalBill: roundToDecimalPlaces(
+          state.totalBill - action.data.mealPrice,
+          2
+        ),
+        currentMeals: [
+          ...newMealData.slice(0, currentMealIndex),
+          {
+            ...newMealData[currentMealIndex],
+            count: newMealData[currentMealIndex].count - 1,
+          },
+          ...newMealData.slice(currentMealIndex + 1),
+        ],
       };
     }
   } else {
@@ -71,6 +107,7 @@ export const MealsContextProvider = (props) => {
         mealData: mealData,
         MEAL_ACTION: MEAL_ACTION,
         totalMealCount: mealData.totalCount,
+        totalBill: mealData.totalBill,
         modalVisible: modalVisible,
         setModalVisible: setModalVisible,
         dispatchMealData: dispatchMealData,

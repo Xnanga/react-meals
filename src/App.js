@@ -6,11 +6,14 @@ import FeaturedImage from "./Components/Banners/FeaturedImage/FeaturedImage";
 import Card from "./Components/UI/Card/Card";
 import MealsMenu from "./Components/Meals/MealsMenu";
 import Modal from "./Components/UI/Modal/Modal";
+import Cart from "./Components/Cart/Cart";
 
 function App() {
   return (
     <MealsContextProvider>
-      <Modal />
+      <Modal>
+        <Cart />
+      </Modal>
       <Header />
       <FeaturedImage imgSrc="/meals.jpg" imgAlt="A table of food" />
       <main>

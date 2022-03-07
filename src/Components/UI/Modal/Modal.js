@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import ReactDOM from "react-dom";
 
 import Backdrop from "./Backdrop";
@@ -9,12 +9,16 @@ import styles from "./Modal.module.css";
 const Modal = (props) => {
   const ctx = useContext(MealsContext);
 
+  const modalVisiblityHandler = (e) => {
+    if (e.target.id === "backdrop") ctx.setModalVisible(false);
+  };
+
   return (
     <>
       {ctx.modalVisible &&
         ReactDOM.createPortal(
-          <Backdrop clickAction={ctx.setModalVisible}>
-            <div className={styles.modal}>MODAL</div>
+          <Backdrop id="backdrop" clickAction={(e) => modalVisiblityHandler(e)}>
+            <div className={styles.modal}>{props.children}</div>
           </Backdrop>,
           document.getElementById("backdrop-root")
         )}

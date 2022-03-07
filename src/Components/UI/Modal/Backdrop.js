@@ -9,10 +9,11 @@ const Backdrop = (props) => {
 
   return (
     <div
+      id={props.id}
       className={`${styles.backdrop} ${
         ctx.modalVisible ? styles["backdrop-active"] : ""
       }`}
-      onClick={() => props.clickAction(false)}
+      onClick={(e) => props.clickAction(e)}
     >
       {props.children}
     </div>
