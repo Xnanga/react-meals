@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useContext } from "react";
 
 import styles from "./Meal.module.css";
 import MealsContext from "../../Context/meals-context";
